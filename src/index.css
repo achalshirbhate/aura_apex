@@ -32,8 +32,8 @@
 .bg-grid-overlay {
   background-size: 40px 40px;
   background-image: 
-    linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
 }
 
 /* Glassmorphism Card */
@@ -49,14 +49,14 @@
 }
 
 .glass-card-hover:hover {
-  border-color: rgba(204, 255, 0, 0.4);
-  box-shadow: 0 0 25px -5px rgba(204, 255, 0, 0.2);
+  border-color: rgba(204, 255, 0, 0.25);
+  box-shadow: 0 0 12px -3px rgba(204, 255, 0, 0.12);
   transform: translateY(-2px);
 }
 
-/* Glowing Neon Text */
+/* Glowing Neon Text - Subtle */
 .text-neon-glow {
-  text-shadow: 0 0 20px rgba(204, 255, 0, 0.5);
+  text-shadow: 0 0 8px rgba(204, 255, 0, 0.25);
 }
 
 /* Neon Gradient Text */

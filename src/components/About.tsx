@@ -6,7 +6,7 @@ export const About: React.FC = () => {
   return (
     <section id="about" className="py-20 md:py-32 bg-cyber-bg relative z-10 border-t border-white/5 overflow-hidden">
       {/* Background Subtle Ambient Glow */}
-      <div className="absolute top-1/2 left-0 -translate-y-1/2 w-[450px] h-[450px] bg-cyber-lime/5 rounded-full blur-[140px] pointer-events-none" />
+      <div className="absolute top-1/2 left-0 -translate-y-1/2 w-[450px] h-[450px] bg-cyber-lime/2 rounded-full blur-[160px] pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
@@ -20,7 +20,7 @@ export const About: React.FC = () => {
             className="lg:col-span-7 space-y-6"
           >
             {/* Section Badge */}
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyber-lime/10 border border-cyber-lime/30 text-cyber-lime text-xs font-mono font-bold tracking-widest uppercase">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyber-lime/10 border border-cyber-lime/20 text-cyber-lime text-xs font-mono font-bold tracking-widest uppercase">
               <Sparkles className="w-3.5 h-3.5" />
               <span>Our Story</span>
             </div>

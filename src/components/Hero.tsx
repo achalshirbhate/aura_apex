@@ -9,9 +9,9 @@ interface HeroProps {
 export const Hero: React.FC<HeroProps> = ({ onOpenBookDemo }) => {
   return (
     <section className="relative pt-32 pb-20 md:pt-40 md:pb-28 overflow-hidden bg-grid-overlay">
-      {/* Background Ambient Glows */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-cyber-lime/10 rounded-full blur-[140px] pointer-events-none" />
-      <div className="absolute top-10 right-10 w-[300px] h-[300px] bg-cyber-lime/5 rounded-full blur-[100px] pointer-events-none" />
+      {/* Background Ambient Glows - Subtle */}
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-cyber-lime/4 rounded-full blur-[160px] pointer-events-none" />
+      <div className="absolute top-10 right-10 w-[300px] h-[300px] bg-cyber-lime/2 rounded-full blur-[120px] pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="text-center max-w-4xl mx-auto space-y-6">
@@ -20,7 +20,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBookDemo }) => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-cyber-card border border-cyber-lime/30 text-cyber-lime text-xs sm:text-sm font-semibold tracking-wide uppercase shadow-lime-glow-sm"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-cyber-card border border-cyber-lime/20 text-cyber-lime text-xs sm:text-sm font-semibold tracking-wide uppercase shadow-lime-glow-sm"
           >
             <Dumbbell className="w-4 h-4 text-cyber-lime animate-pulse" />
             <span>The Future of Fitness Is Here</span>
@@ -59,7 +59,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBookDemo }) => {
           >
             <a
               href="#ecosystem"
-              className="w-full sm:w-auto flex items-center justify-center gap-3 px-8 py-4 rounded-xl bg-cyber-card border border-white/10 text-white font-semibold text-base hover:border-cyber-lime/50 hover:bg-cyber-cardHover transition-all duration-300 group"
+              className="w-full sm:w-auto flex items-center justify-center gap-3 px-8 py-4 rounded-xl bg-cyber-card border border-white/10 text-white font-semibold text-base hover:border-cyber-lime/30 hover:bg-cyber-cardHover transition-all duration-300 group"
             >
               <span>Explore Platform</span>
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform text-cyber-lime" />
@@ -80,7 +80,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBookDemo }) => {
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.4 }}
-          className="mt-14 relative max-w-5xl mx-auto rounded-2xl p-2 sm:p-4 bg-gradient-to-b from-cyber-lime/20 via-white/5 to-transparent border border-cyber-lime/30 shadow-2xl shadow-cyber-lime/10 backdrop-blur-xl"
+          className="mt-14 relative max-w-5xl mx-auto rounded-2xl p-2 sm:p-4 bg-gradient-to-b from-white/10 via-white/5 to-transparent border border-white/10 shadow-xl backdrop-blur-xl"
         >
           <div className="bg-cyber-card rounded-xl border border-cyber-cardBorder p-4 sm:p-6 overflow-hidden relative">
             {/* Control Bar Header */}

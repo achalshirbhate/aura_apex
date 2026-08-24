@@ -109,11 +109,11 @@ export const WhyAuraApex: React.FC = () => {
                 viewport={{ once: true }}
                 transition={{ duration: 0.4, delay: index * 0.08 }}
                 onClick={() => setActiveFeature(item)}
-                className="group p-6 rounded-2xl bg-cyber-card border border-cyber-cardBorder hover:border-cyber-lime/50 transition-all duration-300 shadow-card-glow hover:-translate-y-1 hover:shadow-lime-glow-sm cursor-pointer flex flex-col justify-between"
+                className="group p-6 rounded-2xl bg-cyber-card border border-cyber-cardBorder hover:border-cyber-lime/30 transition-all duration-300 shadow-card-glow hover:-translate-y-1 hover:shadow-lime-glow-sm cursor-pointer flex flex-col justify-between"
               >
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
-                    <div className="p-3 rounded-xl bg-cyber-bg border border-white/10 text-cyber-lime group-hover:border-cyber-lime group-hover:bg-cyber-lime group-hover:text-black transition-all duration-300">
+                    <div className="p-3 rounded-xl bg-cyber-bg border border-white/10 text-cyber-lime group-hover:border-cyber-lime/30 transition-all duration-300">
                       <IconComp className="w-6 h-6" />
                     </div>
                     <ChevronRight className="w-5 h-5 text-cyber-textMuted group-hover:text-cyber-lime group-hover:translate-x-1 transition-all" />

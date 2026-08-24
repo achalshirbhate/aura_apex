@@ -96,10 +96,10 @@ export const Ecosystem: React.FC = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: index * 0.15 }}
-                className="group relative p-8 rounded-3xl bg-cyber-card border border-cyber-cardBorder hover:border-cyber-lime/50 transition-all duration-300 shadow-card-glow hover:-translate-y-2 hover:shadow-lime-glow flex flex-col justify-between"
+                className="group relative p-8 rounded-3xl bg-cyber-card border border-cyber-cardBorder hover:border-cyber-lime/30 transition-all duration-300 shadow-card-glow hover:-translate-y-1 hover:shadow-lime-glow-sm flex flex-col justify-between"
               >
-                {/* Glowing Top Accent Line */}
-                <div className="absolute top-0 left-8 right-8 h-0.5 bg-gradient-to-r from-transparent via-cyber-lime/40 to-transparent group-hover:via-cyber-lime transition-all duration-300" />
+                {/* Subtle Top Accent Line */}
+                <div className="absolute top-0 left-8 right-8 h-0.5 bg-gradient-to-r from-transparent via-cyber-lime/20 to-transparent group-hover:via-cyber-lime/40 transition-all duration-300" />
 
                 <div className="space-y-6">
                   {/* Category & Icon */}

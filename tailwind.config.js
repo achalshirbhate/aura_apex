@@ -12,7 +12,7 @@ export default {
           cardBorder: '#222422',
           lime: '#CCFF00',
           limeHover: '#A8FF00',
-          limeGlow: 'rgba(204, 255, 0, 0.25)',
+          limeGlow: 'rgba(204, 255, 0, 0.12)',
           textMuted: '#A1A1AA',
         },
       },
@@ -21,12 +21,12 @@ export default {
         mono: ['JetBrains Mono', 'monospace'],
       },
       boxShadow: {
-        'lime-glow': '0 0 25px -5px rgba(204, 255, 0, 0.4)',
-        'lime-glow-sm': '0 0 15px -3px rgba(204, 255, 0, 0.3)',
+        'lime-glow': '0 0 12px -2px rgba(204, 255, 0, 0.18)',
+        'lime-glow-sm': '0 0 8px -2px rgba(204, 255, 0, 0.12)',
         'card-glow': '0 8px 32px 0 rgba(0, 0, 0, 0.37)',
       },
       backgroundImage: {
-        'radial-glow': 'radial-gradient(circle at 50% 0%, rgba(204, 255, 0, 0.12) 0%, transparent 60%)',
+        'radial-glow': 'radial-gradient(circle at 50% 0%, rgba(204, 255, 0, 0.05) 0%, transparent 60%)',
         'grid-pattern': 'linear-gradient(to right, #1f211f 1px, transparent 1px), linear-gradient(to bottom, #1f211f 1px, transparent 1px)',
       },
       animation: {
