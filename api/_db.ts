@@ -1,6 +1,6 @@
-import { Pool, neon } from '@neondatabase/serverless';
+import { Pool } from '@neondatabase/serverless';
 
-// Table initialization DDL
+// Table initialization DDL for automatic schema creation
 const INIT_SCHEMA_SQL = `
 CREATE TABLE IF NOT EXISTS demo_bookings (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -18,32 +18,43 @@ CREATE TABLE IF NOT EXISTS demo_bookings (
 CREATE INDEX IF NOT EXISTS idx_demo_bookings_date_time ON demo_bookings(booking_date, booking_time);
 `;
 
+let pool: Pool | null = null;
 let isInitialized = false;
 
 /**
- * Execute parameterized SQL query against PostgreSQL database
+ * Get or initialize serverless Neon PostgreSQL Connection Pool
  */
-export async function executeQuery<T = any>(sql: string, params: any[] = []): Promise<T[]> {
+export function getPool(): Pool {
   const connectionString = process.env.DATABASE_URL;
 
   if (!connectionString) {
     throw new Error('DATABASE_URL environment variable is not configured. Please set DATABASE_URL in Vercel settings.');
   }
 
-  // Create neon SQL client
-  const sqlClient = neon(connectionString);
+  if (!pool) {
+    pool = new Pool({ connectionString });
+  }
 
-  // Run schema auto-init once if needed
+  return pool;
+}
+
+/**
+ * Execute parameterized SQL query safely against Neon PostgreSQL database
+ */
+export async function executeQuery<T = any>(sql: string, params: any[] = []): Promise<T[]> {
+  const client = getPool();
+
+  // Run schema auto-init once per instance if needed
   if (!isInitialized) {
     try {
-      await sqlClient(INIT_SCHEMA_SQL);
+      await client.query(INIT_SCHEMA_SQL);
       isInitialized = true;
     } catch (err) {
       console.warn('Database schema auto-init notice:', err);
     }
   }
 
-  // Execute parameterized query
-  const result = await sqlClient(sql, params);
-  return result as T[];
+  // Execute parameterized query to eliminate SQL injection risks
+  const result = await client.query(sql, params);
+  return result.rows as T[];
 }
