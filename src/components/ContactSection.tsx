@@ -11,6 +11,7 @@ export const ContactSection: React.FC = () => {
   });
 
   const [errors, setErrors] = useState<{ fullName?: string; email?: string; message?: string }>({});
+  const [serverError, setServerError] = useState<string>('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
 
@@ -39,19 +40,39 @@ export const ContactSection: React.FC = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validate()) return;
 
     setIsSubmitting(true);
+    setServerError('');
 
-    // Simulate API network request
-    setTimeout(() => {
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok || !data.success) {
+        setServerError(data.message || 'Something went wrong. Please try again.');
+        setIsSubmitting(false);
+        return;
+      }
+
       setIsSubmitting(false);
       setIsSuccess(true);
       setFormData({ fullName: '', email: '', message: '' });
       setErrors({});
-    }, 1200);
+    } catch (err) {
+      console.error('Contact submission error:', err);
+      setServerError('Something went wrong. Please check your connection and try again.');
+      setIsSubmitting(false);
+    }
   };
 
   const handleMessageChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -141,6 +162,14 @@ export const ContactSection: React.FC = () => {
                 <span className="text-xs font-mono text-cyber-lime">AURA APEX CONNECT</span>
               </div>
 
+              {/* Server Error Banner */}
+              {serverError && (
+                <div className="mb-4 p-3 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-xs font-medium flex items-center gap-2">
+                  <AlertCircle className="w-4 h-4 flex-shrink-0" />
+                  <span>{serverError}</span>
+                </div>
+              )}
+
               <AnimatePresence mode="wait">
                 {isSuccess ? (
                   <motion.div
@@ -158,7 +187,10 @@ export const ContactSection: React.FC = () => {
                       Thank you for contacting Aura Apex. Our team will review your message and reach out shortly.
                     </p>
                     <button
-                      onClick={() => setIsSuccess(false)}
+                      onClick={() => {
+                        setIsSuccess(false);
+                        setServerError('');
+                      }}
                       className="px-6 py-2.5 rounded-xl bg-cyber-bg border border-white/10 text-white text-xs font-mono hover:border-cyber-lime/40 transition-colors"
                     >
                       Send Another Message
@@ -180,6 +212,7 @@ export const ContactSection: React.FC = () => {
                           onChange={(e) => {
                             setFormData({ ...formData, fullName: e.target.value });
                             if (errors.fullName) setErrors({ ...errors, fullName: undefined });
+                            if (serverError) setServerError('');
                           }}
                           placeholder="Alex Mercer"
                           className={`w-full pl-10 pr-4 py-3 rounded-xl bg-cyber-bg border text-sm text-white focus:outline-none transition-colors ${
@@ -210,6 +243,7 @@ export const ContactSection: React.FC = () => {
                           onChange={(e) => {
                             setFormData({ ...formData, email: e.target.value });
                             if (errors.email) setErrors({ ...errors, email: undefined });
+                            if (serverError) setServerError('');
                           }}
                           placeholder="alex@fitness.com"
                           className={`w-full pl-10 pr-4 py-3 rounded-xl bg-cyber-bg border text-sm text-white focus:outline-none transition-colors ${
@@ -253,7 +287,10 @@ export const ContactSection: React.FC = () => {
                           id="message"
                           rows={4}
                           value={formData.message}
-                          onChange={handleMessageChange}
+                          onChange={(e) => {
+                            handleMessageChange(e);
+                            if (serverError) setServerError('');
+                          }}
                           placeholder="Describe your fitness business or vision..."
                           className={`w-full pl-10 pr-4 py-3 rounded-xl bg-cyber-bg border text-sm text-white focus:outline-none transition-colors resize-none ${
                             errors.message

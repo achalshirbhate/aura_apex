@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Calendar, Clock, User, Building, Mail, Users, CheckCircle2, ChevronRight, ChevronLeft, Sparkles } from 'lucide-react';
+import { X, Calendar, Clock, User, Building, Mail, Users, CheckCircle2, ChevronRight, ChevronLeft, Sparkles, AlertCircle } from 'lucide-react';
 import { DemoFormData } from '../types';
 
 interface BookDemoModalProps {
@@ -19,6 +19,8 @@ export const BookDemoModal: React.FC<BookDemoModalProps> = ({ isOpen, onClose })
     teamSize: '10-50',
   });
   const [errorMsg, setErrorMsg] = useState<string>('');
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [confirmedBookingId, setConfirmedBookingId] = useState<string>('');
 
   if (!isOpen) return null;
 
@@ -34,16 +36,17 @@ export const BookDemoModal: React.FC<BookDemoModalProps> = ({ isOpen, onClose })
 
   // Available time slots
   const availableTimeSlots = [
-    { label: '09:00 AM EST', period: 'Morning' },
-    { label: '11:00 AM EST', period: 'Morning' },
-    { label: '01:30 PM EST', period: 'Afternoon' },
-    { label: '03:00 PM EST', period: 'Afternoon' },
-    { label: '04:30 PM EST', period: 'Late Afternoon' },
-    { label: '06:00 PM EST', period: 'Evening' },
+    { label: '09:00 AM IST', period: 'Morning' },
+    { label: '11:00 AM IST', period: 'Morning' },
+    { label: '01:30 PM IST', period: 'Afternoon' },
+    { label: '03:00 PM IST', period: 'Afternoon' },
+    { label: '04:30 PM IST', period: 'Late Afternoon' },
+    { label: '06:00 PM IST', period: 'Evening' },
   ];
 
-  const handleNext = () => {
+  const handleNext = async () => {
     setErrorMsg('');
+
     if (currentStep === 1) {
       if (!formData.date) {
         setErrorMsg('Please select a date for your demo call.');
@@ -69,7 +72,36 @@ export const BookDemoModal: React.FC<BookDemoModalProps> = ({ isOpen, onClose })
         setErrorMsg('Please enter your company or gym name.');
         return;
       }
-      setCurrentStep(4);
+
+      // Submit booking to production serverless API endpoint
+      setIsSubmitting(true);
+
+      try {
+        const response = await fetch('/api/book-demo', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(formData),
+        });
+
+        const data = await response.json();
+
+        if (!response.ok || !data.success) {
+          setErrorMsg(data.message || 'This time slot is no longer available. Please select another time.');
+          setIsSubmitting(false);
+          return;
+        }
+
+        // Successfully booked in database
+        setConfirmedBookingId(data.bookingId || `APEX-2026-${Math.random().toString(36).substring(2, 8).toUpperCase()}`);
+        setIsSubmitting(false);
+        setCurrentStep(4);
+      } catch (err) {
+        console.error('Book demo submit error:', err);
+        setErrorMsg('Something went wrong. Please check your connection and try again.');
+        setIsSubmitting(false);
+      }
     }
   };
 
@@ -91,6 +123,7 @@ export const BookDemoModal: React.FC<BookDemoModalProps> = ({ isOpen, onClose })
       teamSize: '10-50',
     });
     setErrorMsg('');
+    setConfirmedBookingId('');
     onClose();
   };
 
@@ -173,8 +206,8 @@ export const BookDemoModal: React.FC<BookDemoModalProps> = ({ isOpen, onClose })
           {/* Validation Error Banner */}
           {errorMsg && (
             <div className="mb-4 p-3 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-xs font-medium flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-red-500 animate-ping" />
-              {errorMsg}
+              <AlertCircle className="w-4 h-4 flex-shrink-0" />
+              <span>{errorMsg}</span>
             </div>
           )}
 
@@ -273,7 +306,10 @@ export const BookDemoModal: React.FC<BookDemoModalProps> = ({ isOpen, onClose })
                     <input
                       type="text"
                       value={formData.fullName}
-                      onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
+                      onChange={(e) => {
+                        setFormData({ ...formData, fullName: e.target.value });
+                        if (errorMsg) setErrorMsg('');
+                      }}
                       placeholder="Jane Doe"
                       className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-cyber-bg border border-white/10 text-white text-sm focus:border-cyber-lime focus:outline-none"
                     />
@@ -289,7 +325,10 @@ export const BookDemoModal: React.FC<BookDemoModalProps> = ({ isOpen, onClose })
                     <input
                       type="email"
                       value={formData.email}
-                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                      onChange={(e) => {
+                        setFormData({ ...formData, email: e.target.value });
+                        if (errorMsg) setErrorMsg('');
+                      }}
                       placeholder="jane@company.com"
                       className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-cyber-bg border border-white/10 text-white text-sm focus:border-cyber-lime focus:outline-none"
                     />
@@ -307,7 +346,10 @@ export const BookDemoModal: React.FC<BookDemoModalProps> = ({ isOpen, onClose })
                     <input
                       type="text"
                       value={formData.companyName}
-                      onChange={(e) => setFormData({ ...formData, companyName: e.target.value })}
+                      onChange={(e) => {
+                        setFormData({ ...formData, companyName: e.target.value });
+                        if (errorMsg) setErrorMsg('');
+                      }}
                       placeholder="Apex Fitness Hub"
                       className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-cyber-bg border border-white/10 text-white text-sm focus:border-cyber-lime focus:outline-none"
                     />
@@ -345,8 +387,8 @@ export const BookDemoModal: React.FC<BookDemoModalProps> = ({ isOpen, onClose })
 
               <div className="p-4 rounded-2xl bg-cyber-bg border border-white/10 max-w-md mx-auto text-left space-y-2 text-xs font-mono">
                 <div className="text-cyber-lime font-bold border-b border-white/10 pb-2 flex items-center justify-between">
-                  <span>STATUS:</span>
-                  <span className="text-green-400">DEMO SCHEDULED</span>
+                  <span>BOOKING CONFIRMATION:</span>
+                  <span className="text-cyber-lime">{confirmedBookingId}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-cyber-textMuted">Attendee:</span>
@@ -382,7 +424,8 @@ export const BookDemoModal: React.FC<BookDemoModalProps> = ({ isOpen, onClose })
               {currentStep > 1 ? (
                 <button
                   onClick={handleBack}
-                  className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-cyber-bg border border-white/10 text-cyber-textMuted hover:text-white hover:border-white/20 text-xs font-semibold transition-colors"
+                  disabled={isSubmitting}
+                  className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-cyber-bg border border-white/10 text-cyber-textMuted hover:text-white hover:border-white/20 text-xs font-semibold transition-colors disabled:opacity-50"
                 >
                   <ChevronLeft className="w-4 h-4" />
                   <span>Back</span>
@@ -393,10 +436,20 @@ export const BookDemoModal: React.FC<BookDemoModalProps> = ({ isOpen, onClose })
 
               <button
                 onClick={handleNext}
-                className="flex items-center gap-2 px-6 py-3 rounded-xl bg-cyber-lime text-black font-bold text-sm hover:bg-cyber-limeHover transition-all shadow-lime-glow active:scale-95"
+                disabled={isSubmitting}
+                className="flex items-center gap-2 px-6 py-3 rounded-xl bg-cyber-lime text-black font-bold text-sm hover:bg-cyber-limeHover transition-all shadow-lime-glow active:scale-95 disabled:opacity-50"
               >
-                <span>{currentStep === 3 ? 'Confirm & Book Demo' : 'Next Step'}</span>
-                <ChevronRight className="w-4 h-4" />
+                {isSubmitting ? (
+                  <>
+                    <div className="w-4 h-4 rounded-full border-2 border-black border-t-transparent animate-spin" />
+                    <span>Reserving Slot...</span>
+                  </>
+                ) : (
+                  <>
+                    <span>{currentStep === 3 ? 'Confirm & Book Demo' : 'Next Step'}</span>
+                    <ChevronRight className="w-4 h-4" />
+                  </>
+                )}
               </button>
             </div>
           )}
