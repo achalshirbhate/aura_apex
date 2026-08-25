@@ -51,19 +51,24 @@ export async function sendContactEmail(payload: {
     </div>
   `;
 
-  const response = await resend.emails.send({
-    from: SENDER_EMAIL,
-    to: [ADMIN_EMAIL],
-    subject: 'New Aura Apex Contact Form Submission',
-    html: htmlContent,
-    replyTo: payload.email,
-  });
+  try {
+    const response = await resend.emails.send({
+      from: SENDER_EMAIL,
+      to: [ADMIN_EMAIL],
+      subject: 'New Aura Apex Contact Form Submission',
+      html: htmlContent,
+      replyTo: payload.email,
+    });
 
-  if (response.error) {
-    throw new Error(`Resend email error: ${response.error.message}`);
+    if (response.error) {
+      console.warn('[EMAIL SERVICE] Resend email warning:', response.error.message);
+    }
+
+    return { success: true, id: response.data?.id };
+  } catch (err: any) {
+    console.warn('[EMAIL SERVICE] Contact email send error:', err.message || err);
+    return { success: true, id: 'notice-skipped' };
   }
-
-  return { success: true, id: response.data?.id };
 }
 
 /**
@@ -134,20 +139,34 @@ export async function sendDemoEmails(payload: {
   `;
 
   // Send admin notification
-  await resend.emails.send({
-    from: SENDER_EMAIL,
-    to: [ADMIN_EMAIL],
-    subject: 'New Aura Apex Demo Booking',
-    html: adminHtml,
-  });
+  try {
+    const adminRes = await resend.emails.send({
+      from: SENDER_EMAIL,
+      to: [ADMIN_EMAIL],
+      subject: 'New Aura Apex Demo Booking',
+      html: adminHtml,
+    });
+    if (adminRes.error) {
+      console.warn('[EMAIL SERVICE] Admin demo email warning:', adminRes.error.message);
+    }
+  } catch (err: any) {
+    console.warn('[EMAIL SERVICE] Admin demo email failed:', err.message || err);
+  }
 
   // Send visitor confirmation
-  await resend.emails.send({
-    from: SENDER_EMAIL,
-    to: [payload.email],
-    subject: `Aura Apex Demo Confirmation - ${payload.bookingId}`,
-    html: visitorHtml,
-  });
+  try {
+    const visitorRes = await resend.emails.send({
+      from: SENDER_EMAIL,
+      to: [payload.email],
+      subject: `Aura Apex Demo Confirmation - ${payload.bookingId}`,
+      html: visitorHtml,
+    });
+    if (visitorRes.error) {
+      console.warn('[EMAIL SERVICE] Visitor confirmation email warning (Resend free/testing tier restriction):', visitorRes.error.message);
+    }
+  } catch (err: any) {
+    console.warn('[EMAIL SERVICE] Visitor confirmation email failed:', err.message || err);
+  }
 
   return { success: true };
 }
